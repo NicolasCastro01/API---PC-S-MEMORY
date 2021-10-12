@@ -1,6 +1,7 @@
 const os = require("os");
 const fs = require('fs');
 const http = require("http");
+const path = require('path');
 
 class stats {
     constructor(Free, Total, Usage, Platform) {
@@ -32,13 +33,16 @@ setInterval(() => {
 
 
 const data = require("./api.json");
-const dataCleaner = require("./apiCleaner.json");
+
 
 const port = process.env.PORT || 3000;
 
 http.createServer((req, res) => {
-    res.writeHead(200, { 'Access-Control-Allow-Origin': '*' });
+    res.writeHead(200, { 'Access-Control-Allow-Origin': '*' , "content-Type": "application/json"});
     setInterval(() => {
-        res.end(JSON.stringify(data))
+        fs.readFile("./api.json", "utf-8", (err,data) =>{
+            if(err) throw err;
+            res.end(data)
+        })
     }, 1000);
 }).listen(port, () => console.log("Server is running"))
